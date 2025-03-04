@@ -1,7 +1,7 @@
-import 'dart:ffi';
-
+import 'package:currency_converter/domain/currency.dart';
 import 'package:currency_converter/service/currency_service.dart';
 import 'package:currency_converter/widgets/dropdown_currency.dart';
+import 'package:currency_converter/widgets/modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -38,14 +38,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Map<String, double> currencies = {};
+  Map<String, CurrencyInfo> detailedCurrencies = {};
   final currenciesService = CurrencyService();
-  TextEditingController currencyController = TextEditingController();
-  TextEditingController currencyController2 = TextEditingController();
+
   String? currencyName;
   String? currencyName2;
 
-  double? value1;
-  double? value2;
+  Set<String> selectedCurrencies = {};
+
+  double? amount;
 
   Future<void> getCurrency() async {
     var result = await currenciesService.getCurrency();
@@ -54,9 +55,18 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> getJSON() async {
+    var result = await ConvertJsonToMap.readJson();
+    setState(() {
+      detailedCurrencies = result;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
+    getJSON();
     fetchCurrencies();
   }
 
@@ -64,17 +74,29 @@ class _MyHomePageState extends State<MyHomePage> {
     await getCurrency();
   }
 
-  void getConvertedCurrency() {
-    var convertedRate = currencies[currencyName2];
-    var rate = currencies[currencyName];
-    value1 ??= 0;
-    if (rate != null && convertedRate != null) {
-      var toUSD = value1! / rate;
-      var toNewCurrency = toUSD * convertedRate;
-      currencyController2.text = toNewCurrency.toString();
+  double? getConvertedCurrency(
+      {required String? fromCurrency,
+      required String? toCurrency,
+      required double? amount}) {
+    var toRate = currencies[toCurrency];
+    var fromRate = currencies[fromCurrency];
+
+    amount ??= 0;
+    if (fromRate != null && toRate != null) {
+      var usdAmount = amount / fromRate;
+      return usdAmount * toRate;
     }
+    return null;
   }
 
+  void addCurrencyToList(String currencyKey) {
+    setState(() {
+      selectedCurrencies.add(currencyKey);
+    });
+    print(selectedCurrencies);
+  }
+
+  void getAllCurrenciesConverted() {}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,64 +104,81 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.only(top: 100),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                DropdownCurrency(
-                    names: currencies.keys.toList(),
-                    onSelected: (name) {
-                      setState(() {
-                        currencyName = name;
-                      });
-                    }),
-                DropdownCurrency(
-                  names: currencies.keys.toList(),
-                  onSelected: (name) {
-                    setState(() {
-                      currencyName2 = name;
-                    });
-                  },
+                Flexible(
+                  child: SizedBox(
+                    width: 350,
+                    child: DropdownCurrency(
+                        entries: detailedCurrencies.entries.toList(),
+                        onSelected: (key) {
+                          setState(() {
+                            currencyName = key;
+                          });
+                        }),
+                  ),
+                ),
+                Flexible(
+                  child: SizedBox(
+                    width: 200,
+                    child: TextField(
+                      onChanged: (value) {
+                        var fromValue = double.tryParse(value);
+                        setState(() {
+                          amount = fromValue;
+                        });
+                      },
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: "amount",
+                          suffixText: currencyName != null &&
+                                  detailedCurrencies.containsKey(currencyName)
+                              ? detailedCurrencies[currencyName]!.symbol
+                              : "-",
+                          suffixStyle: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w300)),
+                    ),
+                  ),
                 ),
               ],
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 5),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    value1 = double.tryParse(value);
-                    getConvertedCurrency();
-                  });
-                },
-                controller: currencyController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter a search term',
+            Row(
+              children: [
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      for (var key in selectedCurrencies)
+                        if (currencies.containsKey(key))
+                          Row(
+                            children: [
+                              Text(detailedCurrencies[key]?.currencyName ??
+                                  ""
+                                      "Currency not found"),
+                              Text(getConvertedCurrency(
+                                      fromCurrency: currencyName,
+                                      toCurrency: key,
+                                      amount: amount)
+                                  .toString())
+                            ],
+                          ),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 5),
-              child: TextField(
-                controller: currencyController2,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter a search term',
-                ),
-              ),
-            ),
+              ],
+            )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          getConvertedCurrency();
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButton: Modal(
+        entries: detailedCurrencies.entries.toList(),
+        onSelected: ((key) => addCurrencyToList(key!)),
       ),
     );
   }

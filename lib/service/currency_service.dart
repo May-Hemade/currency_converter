@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
@@ -38,9 +37,11 @@ class CurrencyService {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedJson = jsonDecode(response.body);
-
+        if (!decodedJson.containsKey('data')) {
+          throw const FormatException('Invalid API response');
+        }
         final CurrencyResponse data = CurrencyResponse.fromJson(decodedJson);
-        print("data $data");
+
         return data.rates;
       } else {
         print("Failed to load currencies: ${response.statusCode}");

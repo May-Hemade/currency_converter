@@ -1,0 +1,182 @@
+{
+  "AUD": {
+    "symbol": "A$",
+    "flag": "AU",
+    "currency_name": "Australian Dollar",
+    "country_name": "Australia"
+  },
+  "BGN": {
+    "symbol": "лв",
+    "flag": "BG",
+    "currency_name": "Bulgarian Lev",
+    "country_name": "Bulgaria"
+  },
+  "BRL": {
+    "symbol": "R$",
+    "flag": "BR",
+    "currency_name": "Brazilian Real",
+    "country_name": "Brazil"
+  },
+  "CAD": {
+    "symbol": "C$",
+    "flag": "CA",
+    "currency_name": "Canadian Dollar",
+    "country_name": "Canada"
+  },
+  "CHF": {
+    "symbol": "CHF",
+    "flag": "CH",
+    "currency_name": "Swiss Franc",
+    "country_name": "Switzerland"
+  },
+  "CNY": {
+    "symbol": "¥",
+    "flag": "CN",
+    "currency_name": "Chinese Yuan",
+    "country_name": "China"
+  },
+  "CZK": {
+    "symbol": "Kč",
+    "flag": "CZ",
+    "currency_name": "Czech Koruna",
+    "country_name": "Czech Republic"
+  },
+  "DKK": {
+    "symbol": "kr",
+    "flag": "DK",
+    "currency_name": "Danish Krone",
+    "country_name": "Denmark"
+  },
+  "EUR": {
+    "symbol": "€",
+    "flag": "EU",
+    "currency_name": "Euro",
+    "country_name": "European Union"
+  },
+  "GBP": {
+    "symbol": "£",
+    "flag": "GB",
+    "currency_name": "British Pound",
+    "country_name": "United Kingdom"
+  },
+  "HKD": {
+    "symbol": "HK$",
+    "flag": "HK",
+    "currency_name": "Hong Kong Dollar",
+    "country_name": "Hong Kong"
+  },
+  "HRK": {
+    "symbol": "kn",
+    "flag": "HR",
+    "currency_name": "Croatian Kuna",
+    "country_name": "Croatia"
+  },
+  "HUF": {
+    "symbol": "Ft",
+    "flag": "HU",
+    "currency_name": "Hungarian Forint",
+    "country_name": "Hungary"
+  },
+  "INR": {
+    "symbol": "₹",
+    "flag": "IN",
+    "currency_name": "Indian Rupee",
+    "country_name": "India"
+  },
+  "JPY": {
+    "symbol": "¥",
+    "flag": "JP",
+    "currency_name": "Japanese Yen",
+    "country_name": "Japan"
+  },
+  "KRW": {
+    "symbol": "₩",
+    "flag": "KR",
+    "currency_name": "South Korean Won",
+    "country_name": "South Korea"
+  },
+  "MXN": {
+    "symbol": "$",
+    "flag": "MX",
+    "currency_name": "Mexican Peso",
+    "country_name": "Mexico"
+  },
+  "MYR": {
+    "symbol": "RM",
+    "flag": "MY",
+    "currency_name": "Malaysian Ringgit",
+    "country_name": "Malaysia"
+  },
+  "NOK": {
+    "symbol": "kr",
+    "flag": "NO",
+    "currency_name": "Norwegian Krone",
+    "country_name": "Norway"
+  },
+  "NZD": {
+    "symbol": "NZ$",
+    "flag": "NZ",
+    "currency_name": "New Zealand Dollar",
+    "country_name": "New Zealand"
+  },
+  "PHP": {
+    "symbol": "₱",
+    "flag": "PH",
+    "currency_name": "Philippine Peso",
+    "country_name": "Philippines"
+  },
+  "PLN": {
+    "symbol": "zł",
+    "flag": "PL",
+    "currency_name": "Polish Zloty",
+    "country_name": "Poland"
+  },
+  "RON": {
+    "symbol": "lei",
+    "flag": "RO",
+    "currency_name": "Romanian Leu",
+    "country_name": "Romania"
+  },
+  "RUB": {
+    "symbol": "₽",
+    "flag": "RU",
+    "currency_name": "Russian Ruble",
+    "country_name": "Russia"
+  },
+  "SEK": {
+    "symbol": "kr",
+    "flag": "SE",
+    "currency_name": "Swedish Krona",
+    "country_name": "Sweden"
+  },
+  "SGD": {
+    "symbol": "S$",
+    "flag": "SG",
+    "currency_name": "Singapore Dollar",
+    "country_name": "Singapore"
+  },
+  "THB": {
+    "symbol": "฿",
+    "flag": "TH",
+    "currency_name": "Thai Baht",
+    "country_name": "Thailand"
+  },
+  "TRY": {
+    "symbol": "₺",
+    "flag": "TR",
+    "currency_name": "Turkish Lira",
+    "country_name": "Turkey"
+  },
+  "USD": {
+    "symbol": "$",
+    "flag": "US",
+    "currency_name": "United States Dollar",
+    "country_name": "United States"
+  },
+  "ZAR": {
+    "symbol": "R",
+    "flag": "ZA",
+    "currency_name": "South African Rand",
+    "country_name": "South Africa"
+  }
+}

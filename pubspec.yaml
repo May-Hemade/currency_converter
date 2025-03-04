@@ -9,6 +9,8 @@ environment:
   sdk: ^3.6.0
 
 dependencies:
+  country_flags: ^3.2.0
+  currency_picker: ^2.0.21
   flutter:
     sdk: flutter
 
@@ -26,3 +28,4 @@ flutter:
   uses-material-design: true
   assets:
     - .env
+    - data/currency_info.json
