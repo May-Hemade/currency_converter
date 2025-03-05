@@ -3,32 +3,31 @@ import 'package:currency_converter/domain/currency.dart';
 import 'package:country_flags/country_flags.dart';
 
 class DropdownCurrency extends StatefulWidget {
-  const DropdownCurrency({
-    super.key,
-    required this.entries,
-    required this.onSelected,
-  });
-
   final List<MapEntry<String, CurrencyInfo>> entries;
   final Function(String?) onSelected;
+  final String? selectedCurrency;
+
+  const DropdownCurrency(
+      {super.key,
+      required this.entries,
+      required this.onSelected,
+      required this.selectedCurrency});
 
   @override
   State<DropdownCurrency> createState() => _DropdownCurrencyState();
 }
 
 class _DropdownCurrencyState extends State<DropdownCurrency> {
-  String? selectedCurrency;
-
   @override
   void initState() {
     super.initState();
-    selectedCurrency = widget.entries.isNotEmpty ? widget.entries[0].key : null;
+    // widget.selectedCurrency = widget.entries.isNotEmpty ? widget.entries[0].key : null;
   }
 
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
-      value: selectedCurrency,
+      value: widget.selectedCurrency,
       isExpanded: true,
       hint: Text(
         "Select Currency",
@@ -66,9 +65,6 @@ class _DropdownCurrencyState extends State<DropdownCurrency> {
         );
       }).toList(),
       onChanged: (newValue) {
-        setState(() {
-          selectedCurrency = newValue;
-        });
         widget.onSelected(newValue);
       },
       dropdownColor: Colors.white,

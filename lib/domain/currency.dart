@@ -6,15 +6,17 @@ class CurrencyInfo {
   String flag;
   String currencyName;
   String countryName;
+  double? rate;
   CurrencyInfo(
       {required this.symbol,
       required this.flag,
       required this.countryName,
-      required this.currencyName});
+      required this.currencyName,
+      this.rate});
 }
 
 class ConvertJsonToMap {
-  static Future<Map<String, CurrencyInfo>> readJson() async {
+  static Future<Map<String, CurrencyInfo>> readCurrenciesFromJson() async {
     try {
       final String response =
           await rootBundle.loadString('data/currency_info.json');
@@ -31,7 +33,6 @@ class ConvertJsonToMap {
 
       print("✅ JSON Loaded Successfully:");
 
-      print(parsedData);
       return parsedData;
     } catch (e) {
       print("❌ Error loading JSON: $e");

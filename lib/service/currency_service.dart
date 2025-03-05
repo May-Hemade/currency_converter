@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 class Currency {
   final String name;
   final double rate;
-
   Currency(this.name, this.rate);
 }
 
@@ -30,10 +29,9 @@ class CurrencyService {
   static final String url = 'https://api.freecurrencyapi.com/v1/latest';
   final String _apiKey = dotenv.env['FREECURRENCY_API_KEY'] ?? '';
 
-  Future<Map<String, double>> getCurrency() async {
+  Future<Map<String, double>> getCurrencyRate() async {
     try {
       final response = await http.get(Uri.parse("$url?apikey=$_apiKey"));
-      print(response.body);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedJson = jsonDecode(response.body);
