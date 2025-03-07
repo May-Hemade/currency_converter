@@ -30,6 +30,9 @@ class CurrencyService {
   final String _apiKey = dotenv.env['FREECURRENCY_API_KEY'] ?? '';
 
   Future<Map<String, double>> getCurrencyRate() async {
+    if (_apiKey.isEmpty) {
+      throw Exception('API key is missing. Please configure the API key.');
+    }
     try {
       final response = await http.get(Uri.parse("$url?apikey=$_apiKey"));
 

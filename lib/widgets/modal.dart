@@ -1,5 +1,5 @@
+import 'package:country_flags/country_flags.dart';
 import 'package:currency_converter/domain/currency.dart';
-
 import 'package:flutter/material.dart';
 
 class Modal extends StatefulWidget {
@@ -27,21 +27,35 @@ class _ModalState extends State<Modal> {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return FloatingActionButton(
       onPressed: () {
         showModalBottomSheet(
+            backgroundColor: colorScheme.inversePrimary,
             context: context,
             builder: (BuildContext context) {
               return ListView.builder(
                 itemCount: widget.entries.length,
                 itemBuilder: (context, index) {
                   final currency = widget.entries[index];
-                  return ListTile(
-                    title: Text(currency.key),
-                    onTap: () {
-                      widget.onSelected(currency.key);
-                      Navigator.pop(context);
-                    },
+                  return Container(
+                    padding: EdgeInsets.only(
+                      left: 10,
+                      top: index == 0 ? 10 : 0,
+                    ),
+                    child: ListTile(
+                      leading: CountryFlag.fromCountryCode(
+                        currency.value.flag,
+                        height: 16,
+                        width: 20,
+                      ),
+                      title: Text("${currency.value.currencyName} "),
+                      trailing: Text("(${currency.key})"),
+                      onTap: () {
+                        widget.onSelected(currency.key);
+                        Navigator.pop(context);
+                      },
+                    ),
                   );
                 },
               );

@@ -1,10 +1,11 @@
 import 'package:currency_converter/domain/currency.dart';
 import 'package:currency_converter/service/currency_service.dart';
 import 'package:currency_converter/widgets/currencies_list.dart';
-import 'package:currency_converter/widgets/dropdown_currency.dart';
+import 'package:currency_converter/widgets/currency_dropdown_menu.dart';
+import 'package:currency_converter/widgets/currency_textfield.dart';
 import 'package:currency_converter/widgets/modal.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 
@@ -101,9 +102,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: colorScheme.inversePrimary,
+        elevation: 10,
         title: Text(widget.title),
         actions: [
           Padding(
@@ -116,64 +119,79 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Flexible(
-                child: SizedBox(
-                  width: 350,
-                  child: DropdownCurrency(
-                      selectedCurrency: currencyName,
-                      entries: detailedCurrencies.entries.toList(),
-                      onSelected: (key) {
-                        setState(() {
-                          currencyName = key;
-                        });
-                      }),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          double screenWidth = constraints.maxWidth;
+          bool isMobile = screenWidth < 600;
+
+          return Center(
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 800),
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          flex: 2,
+                          child: CurrencyDropdownMenu(
+                            showCountryName: isMobile,
+                            selectedCurrency: currencyName,
+                            entries: detailedCurrencies.entries.toList(),
+                            onSelected: (key) {
+                              setState(() {
+                                currencyName = key;
+                              });
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 20),
+                        Flexible(
+                            flex: 1,
+                            child: CurrencyTextfield(
+                                symbol:
+                                    detailedCurrencies[currencyName]?.symbol,
+                                onAmountChanged: (value) {
+                                  setState(() {
+                                    amount = value;
+                                  });
+                                }))
+                      ],
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Expanded(
+                      child: selectedCurrencies.isNotEmpty
+                          ? CurrenciesList(
+                              amount: amount,
+                              fromRate: detailedCurrencies[currencyName]?.rate,
+                              currencies: selectedCurrencies
+                                  .map((key) => detailedCurrencies[key])
+                                  .whereType<CurrencyInfo>()
+                                  .toList(),
+                            )
+                          : Center(
+                              child: Text(
+                              'Please select a currency to convert.',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.inverseSurface,
+                                letterSpacing: 0.5,
+                              ),
+                            )),
+                    ),
+                  ],
                 ),
               ),
-              Flexible(
-                child: SizedBox(
-                  width: 200,
-                  child: TextField(
-                    onChanged: (value) {
-                      var fromValue = double.tryParse(value);
-                      setState(() {
-                        amount = fromValue;
-                      });
-                    },
-                    keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "amount",
-                        suffixText: currencyName != null &&
-                                detailedCurrencies.containsKey(currencyName)
-                            ? detailedCurrencies[currencyName]!.symbol
-                            : "-",
-                        suffixStyle: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w300)),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: CurrenciesList(
-                amount: amount,
-                fromRate: detailedCurrencies[currencyName]?.rate,
-                currencies: selectedCurrencies
-                    .map((key) => detailedCurrencies[key])
-                    .whereType<CurrencyInfo>()
-                    .toList()),
-          )
-        ],
+            ),
+          );
+        },
       ),
       floatingActionButton: Modal(
         entries: detailedCurrencies.entries.toList(),

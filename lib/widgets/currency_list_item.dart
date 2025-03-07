@@ -28,13 +28,19 @@ class CurrencyListItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(50),
         child: CountryFlag.fromCountryCode(
           currency.flag,
-          height: 24,
-          width: 24,
+          height: 22,
+          width: 22,
         ),
       ),
-      title: Text(currency.countryName),
-      trailing: Text(formatCurrency(roundCurrency(getConvertedCurrency(
-          fromRate: fromRate, toRate: currency.rate, amount: amount)))),
+      title: Text(
+        currency.countryName,
+        style: TextStyle(fontSize: 14),
+      ),
+      trailing: Text(
+        formatCurrency(roundCurrency(getConvertedCurrency(
+            fromRate: fromRate, toRate: currency.rate, amount: amount))),
+        style: TextStyle(fontSize: 14),
+      ),
     );
   }
 }

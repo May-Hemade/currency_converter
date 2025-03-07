@@ -6,7 +6,7 @@ double? getConvertedCurrency(
   if (fromRate == toRate) {
     return amount;
   }
-  if (fromRate != null && toRate != null) {
+  if (fromRate != null && toRate != null && fromRate != 0) {
     var usdAmount = amount / fromRate;
     return usdAmount * toRate;
   }
@@ -14,5 +14,5 @@ double? getConvertedCurrency(
 }
 
 double roundCurrency(double? value) {
-  return double.parse(value?.toStringAsFixed(2) ?? "");
+  return value != null ? double.parse(value.toStringAsFixed(2)) : 0.00;
 }
