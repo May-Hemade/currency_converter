@@ -1,3 +1,4 @@
+import 'package:currency_converter/domain/amount.dart';
 import 'package:currency_converter/domain/currency.dart';
 import 'package:currency_converter/service/currency_service.dart';
 import 'package:currency_converter/widgets/currencies_list.dart';
@@ -62,10 +63,9 @@ bool isDarkMode = false;
 class _MyHomePageState extends State<MyHomePage> {
   Map<String, CurrencyInfo> detailedCurrencies = {};
   final currenciesService = CurrencyService();
-  String? currencyName;
 
   Set<String> selectedCurrencies = {};
-  double? amount;
+  Amount amount = Amount(amount: 0, currency: "USD");
 
   @override
   void initState() {
@@ -82,7 +82,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     setState(() {
       detailedCurrencies = currencies;
-      currencyName = "USD";
     });
   }
 
@@ -140,11 +139,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           flex: 2,
                           child: CurrencyDropdownMenu(
                             showCountryName: isMobile,
-                            selectedCurrency: currencyName,
+                            selectedCurrency: amount.currency,
                             entries: detailedCurrencies.entries.toList(),
                             onSelected: (key) {
                               setState(() {
-                                currencyName = key;
+                                amount = Amount(
+                                    amount: amount.amount,
+                                    currency: key ?? "USD");
                               });
                             },
                           ),
@@ -154,7 +155,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             flex: 1,
                             child: CurrencyTextfield(
                                 symbol:
-                                    detailedCurrencies[currencyName]?.symbol,
+                                    detailedCurrencies[amount.currency]?.symbol,
+                                currency: amount.currency,
                                 onAmountChanged: (value) {
                                   setState(() {
                                     amount = value;
@@ -168,8 +170,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     Expanded(
                       child: selectedCurrencies.isNotEmpty
                           ? CurrenciesList(
+                              onCurrencyConversion: (value) {
+                                setState(() {
+                                  amount = value;
+                                });
+                              },
+                              onDelete: (value) {
+                                setState(() {
+                                  selectedCurrencies.remove(value);
+                                });
+                              },
                               amount: amount,
-                              fromRate: detailedCurrencies[currencyName]?.rate,
+                              fromRate:
+                                  detailedCurrencies[amount.currency]?.rate,
                               currencies: selectedCurrencies
                                   .map((key) => detailedCurrencies[key])
                                   .whereType<CurrencyInfo>()

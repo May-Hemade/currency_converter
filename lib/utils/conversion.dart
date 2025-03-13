@@ -10,9 +10,12 @@ double? getConvertedCurrency(
     var usdAmount = amount / fromRate;
     return usdAmount * toRate;
   }
-  return null;
+  return 0.0;
 }
 
 double roundCurrency(double? value) {
-  return value != null ? double.parse(value.toStringAsFixed(2)) : 0.00;
+  if (value != null) {
+    return (value * 100).round() / 100;
+  }
+  return 0.00;
 }

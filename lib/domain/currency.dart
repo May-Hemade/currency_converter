@@ -2,13 +2,15 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 class CurrencyInfo {
+  String currency;
   String symbol;
   String flag;
   String currencyName;
   String countryName;
   double? rate;
   CurrencyInfo(
-      {required this.symbol,
+      {required this.currency,
+      required this.symbol,
       required this.flag,
       required this.countryName,
       required this.currencyName,
@@ -26,6 +28,7 @@ class ConvertJsonToMap {
           MapEntry(
               key,
               CurrencyInfo(
+                  currency: value["currency"],
                   symbol: value["symbol"],
                   flag: value["flag"],
                   countryName: value["country_name"],
