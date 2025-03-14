@@ -10,13 +10,14 @@ class CurrenciesList extends StatefulWidget {
   final Function(Amount) onCurrencyConversion;
   final Function(String) onDelete;
 
-  CurrenciesList(
-      {super.key,
-      required this.currencies,
-      required this.amount,
-      required this.fromRate,
-      required this.onCurrencyConversion,
-      required this.onDelete});
+  CurrenciesList({
+    super.key,
+    required this.currencies,
+    required this.amount,
+    required this.fromRate,
+    required this.onCurrencyConversion,
+    required this.onDelete,
+  });
 
   @override
   State<CurrenciesList> createState() => _CurrenciesListState();

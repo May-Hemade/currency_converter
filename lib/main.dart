@@ -2,11 +2,8 @@ import 'package:currency_converter/domain/amount.dart';
 import 'package:currency_converter/domain/currency.dart';
 import 'package:currency_converter/service/currency_service.dart';
 import 'package:currency_converter/widgets/currencies_list.dart';
-import 'package:currency_converter/widgets/currency_dropdown_menu.dart';
-import 'package:currency_converter/widgets/currency_textfield.dart';
 import 'package:currency_converter/widgets/modal.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 
@@ -62,9 +59,10 @@ bool isDarkMode = false;
 
 class _MyHomePageState extends State<MyHomePage> {
   Map<String, CurrencyInfo> detailedCurrencies = {};
+
   final currenciesService = CurrencyService();
 
-  Set<String> selectedCurrencies = {};
+  Set<String> selectedCurrencies = {"USD", "EUR"};
   Amount amount = Amount(amount: 0, currency: "USD");
 
   @override
@@ -72,6 +70,10 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     fetchCurrencies();
+
+    setState(() {
+      Amount(amount: 0, currency: "USD");
+    });
   }
 
   void fetchCurrencies() async {
@@ -89,13 +91,19 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       selectedCurrencies.add(currencyKey);
     });
-    print(selectedCurrencies);
   }
 
   void toggleTheme() {
     setState(() {
       isDarkMode = !isDarkMode;
       widget.changeTheme(isDarkMode ? ThemeMode.dark : ThemeMode.light);
+    });
+  }
+
+  void onSelectedCurrency(String currency) {
+    setState(() {
+      selectedCurrencies.remove(currency);
+      selectedCurrencies.add(currency);
     });
   }
 
@@ -120,9 +128,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          double screenWidth = constraints.maxWidth;
-          bool isMobile = screenWidth < 600;
-
           return Center(
             child: Container(
               constraints: BoxConstraints(maxWidth: 800),
@@ -132,38 +137,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          flex: 2,
-                          child: CurrencyDropdownMenu(
-                            showCountryName: isMobile,
-                            selectedCurrency: amount.currency,
-                            entries: detailedCurrencies.entries.toList(),
-                            onSelected: (key) {
-                              setState(() {
-                                amount = Amount(
-                                    amount: amount.amount,
-                                    currency: key ?? "USD");
-                              });
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 20),
-                        Flexible(
-                            flex: 1,
-                            child: CurrencyTextfield(
-                                symbol:
-                                    detailedCurrencies[amount.currency]?.symbol,
-                                currency: amount.currency,
-                                onAmountChanged: (value) {
-                                  setState(() {
-                                    amount = value;
-                                  });
-                                }))
-                      ],
-                    ),
                     SizedBox(
                       height: 50,
                     ),

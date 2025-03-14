@@ -64,7 +64,6 @@ class _CurrencyDropdownMenuState extends State<CurrencyDropdownMenu> {
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.grey,
-          // width: 1.0,
         ),
         borderRadius: BorderRadius.circular(4),
       ),

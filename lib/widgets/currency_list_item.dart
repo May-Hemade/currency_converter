@@ -15,15 +15,16 @@ class CurrencyListItem extends StatefulWidget {
   final VoidCallback onEdit;
   final Function(String) onDelete;
 
-  CurrencyListItem(
-      {super.key,
-      required this.currency,
-      required this.fromRate,
-      required this.amount,
-      required this.onAmountChanged,
-      required this.isEditing,
-      required this.onEdit,
-      required this.onDelete});
+  CurrencyListItem({
+    super.key,
+    required this.currency,
+    required this.fromRate,
+    required this.amount,
+    required this.onAmountChanged,
+    required this.isEditing,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   @override
   State<CurrencyListItem> createState() => _CurrencyListItemState();
@@ -31,9 +32,9 @@ class CurrencyListItem extends StatefulWidget {
 
 class _CurrencyListItemState extends State<CurrencyListItem> {
   late TextEditingController _controller;
-
   double currentValue = 0;
-
+  Color hoverColor = Colors.transparent;
+  double hoverOpacity = 0.0;
   double convertedAmount = 0;
   bool isOverLayVisibile = false;
 
@@ -81,74 +82,71 @@ class _CurrencyListItemState extends State<CurrencyListItem> {
             borderRadius: BorderRadius.circular(50),
             child: CountryFlag.fromCountryCode(
               widget.currency.flag,
-              height: 22,
-              width: 22,
+              height: 30,
+              width: 30,
             ),
           ),
-          title: GestureDetector(
-            onTap: () {
-              setState(() {
-                isOverLayVisibile = !isOverLayVisibile;
-              });
-            },
-            child: Text(
-              widget.currency.countryName,
-              style: TextStyle(fontSize: 14),
-            ),
-          ),
-          trailing: GestureDetector(
-            onTap: () {
-              setState(() {
-                widget.onEdit();
-              });
-            },
-            child: widget.isEditing
-                ? SizedBox(
-                    width: 100,
-                    child: CurrencyTextfield(
-                        controller: _controller,
-                        symbol: widget.currency.symbol,
-                        currency: widget.currency.currency,
-                        onAmountChanged: (value) {
-                          widget.onAmountChanged(Amount(
-                              amount: value.amount,
-                              currency: widget.currency.currency));
-                        }))
-                : Text(
-                    formatCurrency(convertedAmount),
-                    style: TextStyle(fontSize: 14),
-                  ),
-          )),
-      if (isOverLayVisibile)
-        Positioned.fill(
-            child: Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: Container(
-              decoration: BoxDecoration(
-                color: colorScheme.error.withAlpha(100),
-                border: Border.all(
-                  width: 0.1,
-                  color: colorScheme.error.withAlpha(100),
-                ),
-                borderRadius: BorderRadius.circular(8),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.currency.currency,
+                style: TextStyle(fontSize: 14),
               ),
-              child: Align(
-                  alignment: Alignment.topLeft,
-                  child: GestureDetector(
-                      onTap: () => widget.onDelete(widget.currency.currency),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+              Text(
+                widget.currency.countryName,
+                style: TextStyle(fontSize: 12),
+              )
+            ],
+          ),
+          trailing: SizedBox(
+              width: 100,
+              child: CurrencyTextfield(
+                  controller: _controller,
+                  symbol: widget.currency.symbol,
+                  currency: widget.currency.currency,
+                  onAmountChanged: (value) {
+                    widget.onAmountChanged(Amount(
+                        amount: value.amount,
+                        currency: widget.currency.currency));
+                  }))),
+      Positioned.fill(
+          child: Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                  onTap: () => widget.onDelete(widget.currency.currency),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: MouseRegion(
+                      onEnter: (_) {
+                        setState(() {
+                          hoverOpacity = 1.0;
+                        });
+                      },
+                      onExit: (_) {
+                        setState(() {
+                          hoverOpacity = 0.0;
+                        });
+                      },
+                      onHover: (_) {
+                        setState(() {
+                          hoverColor = colorScheme.outline;
+                        });
+                      },
+                      child: Opacity(
+                        opacity: hoverOpacity,
                         child: CircleAvatar(
-                          backgroundColor: colorScheme.error,
-                          radius: 15,
+                          backgroundColor: hoverColor,
+                          radius: 8,
                           child: Icon(
-                            Icons.close,
+                            Icons.remove,
                             color: Colors.white,
-                            size: 18,
+                            size: 8,
                           ),
                         ),
-                      )))),
-        ))
+                      ),
+                    ),
+                  ))))
     ]);
   }
 }
